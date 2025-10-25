@@ -4,7 +4,6 @@ import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -32,7 +31,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.jpc.ui.theme.JPCTheme
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -62,6 +60,7 @@ fun NavigationApp() {
         composable("passwordfield") { PasswordfieldScreen(navController) }
         composable("column") { ColumnScreen(navController) }
         composable("row") { RowScreen(navController) }
+        composable("other") { OtherScreen(navController) }
     }
 }
 
@@ -76,9 +75,9 @@ fun WelcomeScreen(navController: NavController) {
     ) {
         Box(
             modifier = Modifier
-                .weight(1f) // chiếm hết khoảng trống còn lại
+                .weight(1f)
                 .fillMaxWidth(),
-            contentAlignment = Alignment.Center // căn giữa nội dung
+            contentAlignment = Alignment.Center
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -162,6 +161,12 @@ fun Components(navController: NavController) {
         SectionTitle(title = "Layout")
         ComponentCard(title = "Column", description = "Arranges elements vertically", navController, "column")
         ComponentCard(title = "Row", description = "Arranges elements horizontally", navController, "row")
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        //Phần other
+        SectionTitle(title = "Other Component")
+        ComponentCard(title = "UI Component", description = "Checkbox, Selection, Choose one", navController, "other")
     }
 
 }
@@ -607,7 +612,7 @@ fun RowScreen(navController: NavController) {
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 repeat(3) { colIndex ->
-                    val isHighlighted = colIndex == 1 // ô giữa tô đậm
+                    val isHighlighted = colIndex == 1
                     Box(
                         modifier = Modifier
                             .size(width = 90.dp, height = 60.dp)
@@ -622,6 +627,113 @@ fun RowScreen(navController: NavController) {
         }
     }
 }
+
+
+//Other Screen
+
+@Composable
+fun OtherScreen(navController: NavController) {
+    var isChecked by remember { mutableStateOf(false) }
+    var isSwitchOn by remember { mutableStateOf(false) }
+    var selectedOption by remember { mutableStateOf("Option 1") }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        // Hàng tiêu đề
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
+        ) {
+            Text(
+                text = "<",
+                fontSize = 26.sp,
+                color = Color(0xFF2196F3),
+                modifier = Modifier
+                    .clickable { navController.popBackStack() }
+                    .padding(end = 8.dp)
+            )
+
+            Text(
+                text = "Others",
+                color = Color(0xFF2196F3),
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth(),
+                fontSize = 20.sp
+            )
+        }
+
+        // Checkbox
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+        ) {
+            Checkbox(
+                checked = isChecked,
+                onCheckedChange = { isChecked = it }
+            )
+            Text(
+                text = "Enable notifications",
+                fontSize = 18.sp,
+                modifier = Modifier.padding(start = 8.dp)
+            )
+        }
+
+        // Switch
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+        ) {
+            Switch(
+                checked = isSwitchOn,
+                onCheckedChange = { isSwitchOn = it }
+            )
+            Text(
+                text = if (isSwitchOn) "Dark Mode ON" else "Dark Mode OFF",
+                fontSize = 18.sp,
+                modifier = Modifier.padding(start = 8.dp)
+            )
+        }
+
+        // Radio Buttons
+        Text(
+            text = "Choose an option:",
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Medium,
+            modifier = Modifier.padding(vertical = 8.dp)
+        )
+
+        val options = listOf("Option 1", "Option 2", "Option 3")
+        options.forEach { option ->
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { selectedOption = option }
+                    .padding(vertical = 4.dp)
+            ) {
+                RadioButton(
+                    selected = selectedOption == option,
+                    onClick = { selectedOption = option }
+                )
+                Text(
+                    text = option,
+                    fontSize = 18.sp,
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
+        }
+    }
+}
+
 
 //@Preview(showBackground = true)
 //@Composable
