@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.forgetpass"
+    namespace = "com.example.signwithgg"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.forgetpass"
+        applicationId = "com.example.signwithgg"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -42,6 +42,9 @@ android {
 }
 
 dependencies {
+
+    implementation("io.coil-kt:coil-compose:2.6.0")
+
     implementation("androidx.credentials:credentials:1.5.0")
     implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
@@ -60,6 +63,7 @@ dependencies {
     // --- Compose & Navigation ---
     implementation("androidx.compose.material3:material3:1.3.1")
     implementation("androidx.navigation:navigation-compose:2.8.3")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

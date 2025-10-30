@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "190056359153",
+    "project_id": "uthsmarttasks-57f12",
+    "storage_bucket": "uthsmarttasks-57f12.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190056359153:android:cf0186e8887457c21fb550",
+        "android_client_info": {
+          "package_name": "com.example.forgetpass"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "190056359153-v82p1c24ml6cjlndjef25kj7agmqunfe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.forgetpass",
+            "certificate_hash": "acce550c9e776146d29129439280e05914dedad2"
+          }
+        },
+        {
+          "client_id": "190056359153-5ceuddtb71280bimekrs64e96h3gqo6e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApZ-XJCMrNUkGHgtv2FWXvESxRUCq4lQg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "190056359153-5ceuddtb71280bimekrs64e96h3gqo6e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

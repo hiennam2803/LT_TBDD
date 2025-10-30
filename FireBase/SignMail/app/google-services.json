@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "136216979743",
+    "project_id": "ltdd-de6bf",
+    "storage_bucket": "ltdd-de6bf.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:136216979743:android:0ab2e83b6b60c7680ce82a",
+        "android_client_info": {
+          "package_name": "com.example.mailsign"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBErIbMsg8zlbVxnKb8Nw-3YWrD2CxrjX8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

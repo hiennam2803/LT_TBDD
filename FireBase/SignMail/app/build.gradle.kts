@@ -2,16 +2,15 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-
     id("com.google.gms.google-services")
 }
 
 android {
-    namespace = "com.example.forgetpass"
+    namespace = "com.example.mailsign"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.forgetpass"
+        applicationId = "com.example.mailsign"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -42,24 +41,19 @@ android {
 }
 
 dependencies {
-    implementation("androidx.credentials:credentials:1.5.0")
+
+// Import the BoM for the Firebase platform
+    implementation(platform("com.google.firebase:firebase-bom:34.4.0"))
+
+    // Add the dependency for the Firebase Authentication library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation("com.google.firebase:firebase-auth")
+
+    // Also add the dependencies for the Credential Manager libraries and specify their versions
+    implementation("androidx.credentials:credentials:1.3.0")
     implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
 
-    // --- Firebase BoM (bắt buộc phải ở đầu nhóm Firebase) ---
-    implementation(platform("com.google.firebase:firebase-bom:34.4.0"))
-
-    // --- Firebase services ---
-    implementation("com.google.firebase:firebase-analytics")
-    implementation("com.google.firebase:firebase-auth")
-
-
-    // --- Google Sign-In ---
-    implementation("com.google.android.gms:play-services-auth:21.4.0")
-
-    // --- Compose & Navigation ---
-    implementation("androidx.compose.material3:material3:1.3.1")
-    implementation("androidx.navigation:navigation-compose:2.8.3")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

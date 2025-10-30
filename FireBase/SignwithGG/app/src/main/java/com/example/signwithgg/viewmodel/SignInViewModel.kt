@@ -1,79 +1,53 @@
-package com.example.forgetpass
+package com.example.signwithgg.viewmodel
+
+import com.example.signwithgg.R
 
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
-import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.ManagedActivityResultLauncher
-import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResult
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.credentials.exceptions.NoCredentialException
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.signwithgg.model.UserModel
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
 
-class MainActivity : ComponentActivity() {
+class SignInViewModel : ViewModel() {
 
-    private lateinit var auth: FirebaseAuth
+    private val auth = FirebaseAuth.getInstance()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        auth = FirebaseAuth.getInstance()
-
-        setContent {
-            MaterialTheme {
-                SignInScreen(
-                    onSignInClick = {
-                        signInWithGoogle(
-                            context = this@MainActivity,
-                            scope = lifecycleScope,
-                            launcher = null,
-                            login = {
-                                Toast.makeText(this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show()
-                            }
-                        )
-                    }
-                )
-            }
-        }
-    }
-
-    private fun signInWithGoogle(
+    fun signInWithGoogle(
         context: Context,
-        scope: CoroutineScope,
         launcher: ManagedActivityResultLauncher<Intent, ActivityResult>?,
-        login: () -> Unit
+        onSuccess: (UserModel) -> Unit,
+        onFailure: (String) -> Unit
     ) {
         val credentialManager = CredentialManager.create(context)
 
         val googleIdOption = GetGoogleIdOption.Builder()
             .setFilterByAuthorizedAccounts(false)
             .setAutoSelectEnabled(false)
-            .setServerClientId("190056359153-dg93vq8fae3skolalr1a7r73v64ru5bd.apps.googleusercontent.com")
+            .setServerClientId(context.getString(R.string.web_client_id))
             .build()
 
         val request = GetCredentialRequest.Builder()
             .addCredentialOption(googleIdOption)
             .build()
 
-        scope.launch {
+        viewModelScope.launch {
             try {
                 val result = credentialManager.getCredential(context, request)
                 if (result.credential is CustomCredential) {
@@ -84,11 +58,19 @@ class MainActivity : ComponentActivity() {
 
                         val credential = GoogleAuthProvider.getCredential(token, null)
                         auth.signInWithCredential(credential)
-                            .addOnSuccessListener {
-                                login.invoke()
+                            .addOnSuccessListener { authResult ->
+                                val user = authResult.user
+                                onSuccess(
+                                    UserModel(
+                                        uid = user?.uid,
+                                        name = user?.displayName,
+                                        email = user?.email,
+                                        photoUrl = user?.photoUrl?.toString()
+                                    )
+                                )
                             }
                             .addOnFailureListener { e ->
-                                Toast.makeText(context, "Đăng nhập thất bại: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                                onFailure("Đăng nhập thất bại: ${e.localizedMessage}")
                             }
                     }
                 }
@@ -96,7 +78,7 @@ class MainActivity : ComponentActivity() {
                 launcher?.launch(getIntentToAddAccount())
             } catch (e: GetCredentialException) {
                 e.printStackTrace()
-                Toast.makeText(context, "Lỗi: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                onFailure("Lỗi: ${e.localizedMessage}")
             }
         }
     }
@@ -104,20 +86,6 @@ class MainActivity : ComponentActivity() {
     private fun getIntentToAddAccount(): Intent {
         return Intent(Settings.ACTION_ADD_ACCOUNT).apply {
             putExtra(Settings.EXTRA_ACCOUNT_TYPES, arrayOf("com.google"))
-        }
-    }
-}
-
-@Composable
-fun SignInScreen(onSignInClick: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Button(onClick = onSignInClick) {
-            Text(text = "Đăng nhập bằng Google")
         }
     }
 }
