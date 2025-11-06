@@ -41,7 +41,7 @@ fun SignInScreen(onSignInClick: () -> Unit) {
             Button(
                 onClick = onSignInClick,
                 modifier = Modifier.fillMaxWidth(0.8f),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF339C87))
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF33B3A2))
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
